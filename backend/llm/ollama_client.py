@@ -93,7 +93,7 @@ def parse_json_response(raw: str) -> dict:
     except json.JSONDecodeError:
         pass
 
-    fixed = _fix_backtick_values(raw)
+    fixed = fix_triple_quotes(_fix_backtick_values(raw))
     try:
         return json.loads(fixed)
     except json.JSONDecodeError:
@@ -142,3 +142,16 @@ async def list_available_models() -> list[str]:
             return [m["name"] for m in data.get("models", [])]
         except Exception:
             return []
+
+def fix_triple_quotes(raw: str) -> str:
+    """Replace triple quoted strings with properly escaped JSON strings."""
+    import re
+    def replacer(match):
+        content = match.group(1)
+        content = content.replace('\\', '\\\\')
+        content = content.replace('"', '\\"')
+        content = content.replace('\n', '\\n')
+        content = content.replace('\r', '\\r')
+        content = content.replace('\t', '\\t')
+        return '"' + content + '"'
+    return re.sub(r'"""(.*?)"""', replacer, raw, flags=re.DOTALL)
