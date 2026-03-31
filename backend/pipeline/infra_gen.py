@@ -277,3 +277,23 @@ async def generate_infra(plan: dict, db_result: dict, backend_result: dict, fron
     await emit("stage", f"Infra generated — {len(files)} files")
 
     return {"files": files}
+
+
+def ensure_frontend_files(project_id: str, pages: list):
+    """Make sure critical frontend files always exist."""
+    from backend.storage.file_writer import get_project_path, write_files
+    
+    project_path = get_project_path(project_id)
+    frontend_src = project_path / "frontend" / "src"
+    
+    # Check if App.jsx exists
+    app_jsx = frontend_src / "App.jsx"
+    if not app_jsx.exists():
+        page_imports = "\n".join([f"import {p} from './pages/{p}'" for p in pages])
+        page_routes = "\n".join([f"<Route path='/{p.lower()}' element={{<{p}/>}}/>" for p in pages])
+        first = pages[0] if pages else "Home"
+        
+        write_files(project_id, [{
+            "path": "frontend/src/App.jsx",
+            "content": f"import {{BrowserRouter as Router,Route,Routes}} from 'react-router-dom'\n{page_imports}\nexport default function App(){{return(<Router><Routes><Route path='/' element={{<{first}/>}}/>{page_routes}</Routes></Router>)}}"
+        }])
