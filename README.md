@@ -1,5 +1,6 @@
 # OffRepl — Offline AI Project Generator
 
+
 > Describe your web app. Get full stack code. No internet needed.
 
 Like Bolt.new / Replit — but fully offline on your own machine.
@@ -9,7 +10,7 @@ Like Bolt.new / Replit — but fully offline on your own machine.
 ## What It Does
 
 1. You type a prompt: *"build a todo app with user auth"*
-2. It thinks and plans (Phi-3 Mini)
+2. It thinks and plans (Phi-3 Mini).
 3. It generates full stack code (Qwen2.5-Coder)
 4. You get a complete React + FastAPI + SQLite project
 5. Click Run → your app is live at localhost:5173
