@@ -5,6 +5,8 @@ import ChatPanel from "./components/ChatPanel"
 import StatusBar from "./components/StatusBar"
 import ProjectList from "./components/ProjectList"
 
+
+
 export default function App() {
   const [view, setView] = useState("home") // home | editor
   const [currentProject, setCurrentProject] = useState(null)
